@@ -102,7 +102,14 @@ public:
     Q_PROPERTY(QmlObjectListModel*  diffList                READ diffList                   CONSTANT)
 
     Q_INVOKABLE QStringList searchParameters(const QString& searchText, bool searchInName=true, bool searchInDescriptions=true);
-
+    //CUSTOM
+    Q_INVOKABLE Fact* getParam(const QString& paramName);
+    Q_INVOKABLE void rcToPid();
+    Q_INVOKABLE void changeValue(QString variable, double value);
+    Q_INVOKABLE void changeColor(QString variable, QColor value);
+    Q_INVOKABLE QColor getColor(QString variable);
+    Q_INVOKABLE double getValue(QString variable);
+    //CUSTOM
     Q_INVOKABLE void saveToFile                     (const QString& filename);
     Q_INVOKABLE bool buildDiffFromFile              (const QString& filename);
     Q_INVOKABLE void clearDiff                      (void);
