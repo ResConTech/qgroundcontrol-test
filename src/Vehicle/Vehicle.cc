@@ -100,6 +100,10 @@ const char* Vehicle::_servoRawFactName =            "servoRaw";
 const char* Vehicle::_servoRaw2FactName =           "servoRaw2";
 const char* Vehicle::_servoRaw3FactName =           "servoRaw3";
 const char* Vehicle::_servoRaw4FactName =           "servoRaw4";
+const char* Vehicle::_pwm1FactName =                "pwm1";
+const char* Vehicle::_pwm2FactName =                "pwm2";
+const char* Vehicle::_pwm3FactName =                "pwm3";
+const char* Vehicle::_pwm4FactName =                "pwm4";
 //CUSTOM
 const char* Vehicle::_gpsFactGroupName =                "gps";
 const char* Vehicle::_gps2FactGroupName =               "gps2";
@@ -166,6 +170,10 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _servoRaw2Fact                (0, _servoRaw2FactName,         FactMetaData::valueTypeUint16)
     , _servoRaw3Fact                (0, _servoRaw3FactName,         FactMetaData::valueTypeUint16)
     , _servoRaw4Fact                (0, _servoRaw4FactName,         FactMetaData::valueTypeUint16)
+    , _pwm1Fact                     (0, _pwm1FactName,              FactMetaData::valueTypeUint16)
+    , _pwm2Fact                     (0, _pwm2FactName,              FactMetaData::valueTypeUint16)
+    , _pwm3Fact                     (0, _pwm3FactName,              FactMetaData::valueTypeUint16)
+    , _pwm4Fact                     (0, _pwm4FactName,              FactMetaData::valueTypeUint16)
     //CUSTOM
     , _gpsFactGroup                 (this)
     , _gps2FactGroup                (this)
@@ -326,6 +334,10 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     , _servoRaw2Fact                    (0, _servoRaw2FactName,         FactMetaData::valueTypeUint16)
     , _servoRaw3Fact                    (0, _servoRaw3FactName,         FactMetaData::valueTypeUint16)
     , _servoRaw4Fact                    (0, _servoRaw4FactName,         FactMetaData::valueTypeUint16)
+    , _pwm1Fact                         (0, _pwm1FactName,              FactMetaData::valueTypeUint16)
+    , _pwm2Fact                         (0, _pwm2FactName,              FactMetaData::valueTypeUint16)
+    , _pwm3Fact                         (0, _pwm3FactName,              FactMetaData::valueTypeUint16)
+    , _pwm4Fact                         (0, _pwm4FactName,              FactMetaData::valueTypeUint16)
     //CUSTOM
     , _gpsFactGroup                     (this)
     , _gps2FactGroup                    (this)
@@ -466,6 +478,10 @@ void Vehicle::_commonInit()
     _addFact(&_servoRaw2Fact,           _servoRaw2FactName);
     _addFact(&_servoRaw3Fact,           _servoRaw3FactName);
     _addFact(&_servoRaw4Fact,           _servoRaw4FactName);
+    _addFact(&_pwm1Fact,                _pwm1FactName);
+    _addFact(&_pwm2Fact,                _pwm2FactName);
+    _addFact(&_pwm3Fact,                _pwm3FactName);
+    _addFact(&_pwm4Fact,                _pwm4FactName);
     //CUSTOM
     _hobbsFact.setRawValue(QVariant(QString("0000:00:00")));
     _addFact(&_hobbsFact,               _hobbsFactName);
@@ -1843,6 +1859,44 @@ void Vehicle::_handleRCChannels(mavlink_message_t& message)
         } else {
             pwmValues[i] = -1;
         }
+              //CUSTOM
+        if(channelValue >= 1000 && channelValue <=2000){
+            switch (i){
+            case 1:
+                _pwm1Fact.setRawValue((pwmValues[1] - 1000) / 10);
+                break;
+            case 2:
+                _pwm2Fact.setRawValue((pwmValues[2] - 1000) / 10);
+                break;
+            case 3:
+                _pwm3Fact.setRawValue((pwmValues[3] - 1000) / 10);
+                break;
+            case 4:
+                _pwm4Fact.setRawValue((pwmValues[4] - 1000) / 10);
+                break;
+            default:
+                break;
+            }
+        }
+        else{
+            switch (i){
+            case 1:
+                _pwm1Fact.setRawValue(0);
+                break;
+            case 2:
+                _pwm2Fact.setRawValue(0);
+                break;
+            case 3:
+                _pwm3Fact.setRawValue(0);
+                break;
+            case 4:
+                _pwm4Fact.setRawValue(0);
+                break;
+            default:
+                break;
+            }
+        }
+        //CUSTOM
     }
 
     emit remoteControlRSSIChanged(channels.rssi);
