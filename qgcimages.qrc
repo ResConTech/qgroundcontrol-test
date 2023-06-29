@@ -60,6 +60,8 @@
         <file alias="attitudeInstrument.svg">src/FlightMap/Images/attitudeInstrument.svg</file>
         <file alias="attitudePointer.svg">src/FlightMap/Images/attitudePointer.svg</file>
         <file alias="AwarenessAircraft.svg">src/FlightMap/Images/AwarenessAircraft.svg</file>
+        <file alias="blue_arrow.png">src/FlightDisplay/Images/blue_arrow.png</file>
+        <file alias="white_arrow.png">src/FlightDisplay/Images/white_arrow.png</file>
         <file alias="Battery.svg">src/ui/toolbar/Images/Battery.svg</file>
         <file alias="camera.svg">resources/camera.svg</file>
         <file alias="camera_photo.svg">src/Camera/images/camera_photo.svg</file>
@@ -123,6 +125,7 @@
         <file alias="MAVLinkInspector">src/AnalyzeView/MAVLinkInspector.svg</file>
         <file alias="Megaphone.svg">src/ui/toolbar/Images/Megaphone.svg</file>
         <file alias="MotorComponentIcon.svg">src/AutoPilotPlugins/Common/Images/MotorComponentIcon.svg</file>
+        <file alias="newDroneBody.png">src/FlightDisplay/Images/newDroneBody.png</file>
         <file alias="no-logging-light.svg">src/AutoPilotPlugins/PX4/Images/no-logging-light.svg</file>
         <file alias="no-logging.svg">src/AutoPilotPlugins/PX4/Images/no-logging.svg</file>
         <file alias="ObjectAvoidance.svg">src/AutoPilotPlugins/PX4/Images/ObjectAvoidance.svg</file>
