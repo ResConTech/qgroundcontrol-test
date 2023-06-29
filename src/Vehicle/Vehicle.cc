@@ -95,7 +95,12 @@ const char* Vehicle::_headingToHomeFactName =       "headingToHome";
 const char* Vehicle::_distanceToGCSFactName =       "distanceToGCS";
 const char* Vehicle::_hobbsFactName =               "hobbs";
 const char* Vehicle::_throttlePctFactName =         "throttlePct";
-
+//CUSTOM
+const char* Vehicle::_servoRawFactName =            "servoRaw";
+const char* Vehicle::_servoRaw2FactName =           "servoRaw2";
+const char* Vehicle::_servoRaw3FactName =           "servoRaw3";
+const char* Vehicle::_servoRaw4FactName =           "servoRaw4";
+//CUSTOM
 const char* Vehicle::_gpsFactGroupName =                "gps";
 const char* Vehicle::_gps2FactGroupName =               "gps2";
 const char* Vehicle::_windFactGroupName =               "wind";
@@ -156,6 +161,12 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _distanceToGCSFact            (0, _distanceToGCSFactName,     FactMetaData::valueTypeDouble)
     , _hobbsFact                    (0, _hobbsFactName,             FactMetaData::valueTypeString)
     , _throttlePctFact              (0, _throttlePctFactName,       FactMetaData::valueTypeUint16)
+    //CUSTOM
+    , _servoRawFact                 (0, _servoRawFactName,          FactMetaData::valueTypeUint16)
+    , _servoRaw2Fact                (0, _servoRaw2FactName,         FactMetaData::valueTypeUint16)
+    , _servoRaw3Fact                (0, _servoRaw3FactName,         FactMetaData::valueTypeUint16)
+    , _servoRaw4Fact                (0, _servoRaw4FactName,         FactMetaData::valueTypeUint16)
+    //CUSTOM
     , _gpsFactGroup                 (this)
     , _gps2FactGroup                (this)
     , _windFactGroup                (this)
@@ -310,6 +321,12 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     , _distanceToGCSFact                (0, _distanceToGCSFactName,     FactMetaData::valueTypeDouble)
     , _hobbsFact                        (0, _hobbsFactName,             FactMetaData::valueTypeString)
     , _throttlePctFact                  (0, _throttlePctFactName,       FactMetaData::valueTypeUint16)
+    //CUSTOM
+    , _servoRawFact                     (0, _servoRawFactName,          FactMetaData::valueTypeUint16)
+    , _servoRaw2Fact                    (0, _servoRaw2FactName,         FactMetaData::valueTypeUint16)
+    , _servoRaw3Fact                    (0, _servoRaw3FactName,         FactMetaData::valueTypeUint16)
+    , _servoRaw4Fact                    (0, _servoRaw4FactName,         FactMetaData::valueTypeUint16)
+    //CUSTOM
     , _gpsFactGroup                     (this)
     , _gps2FactGroup                    (this)
     , _windFactGroup                    (this)
@@ -334,7 +351,20 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     _offlineFirmwareTypeSettingChanged(_firmwareType);  // This adds correct terrain capability bit
     _firmwarePlugin->initializeVehicle(this);
 }
-
+//CUSTOM
+QVariant Vehicle:: getSetpointRoll()
+{
+    return _setpointFactGroup.roll()->rawValue();
+}
+QVariant Vehicle:: getSetpointPitch()
+{
+    return _setpointFactGroup.pitch()->rawValue();
+}
+QVariant Vehicle:: getSetpointYaw()
+{
+    return _setpointFactGroup.yaw()->rawValue();
+}
+//CUSTOM
 void Vehicle::trackFirmwareVehicleTypeChanges(void)
 {
     connect(_settingsManager->appSettings()->offlineEditingFirmwareClass(), &Fact::rawValueChanged, this, &Vehicle::_offlineFirmwareTypeSettingChanged);
@@ -431,7 +461,12 @@ void Vehicle::_commonInit()
     _addFact(&_headingToHomeFact,       _headingToHomeFactName);
     _addFact(&_distanceToGCSFact,       _distanceToGCSFactName);
     _addFact(&_throttlePctFact,         _throttlePctFactName);
-
+    //CUSTOM
+    _addFact(&_servoRawFact,            _servoRawFactName);
+    _addFact(&_servoRaw2Fact,           _servoRaw2FactName);
+    _addFact(&_servoRaw3Fact,           _servoRaw3FactName);
+    _addFact(&_servoRaw4Fact,           _servoRaw4FactName);
+    //CUSTOM
     _hobbsFact.setRawValue(QVariant(QString("0000:00:00")));
     _addFact(&_hobbsFact,               _hobbsFactName);
 
@@ -670,6 +705,12 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     case MAVLINK_MSG_ID_HEARTBEAT:
         _handleHeartbeat(message);
         break;
+    
+    //CUSTOM
+    case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+        _handleServoOutputRaw(message);
+        break;
+    //CUSTOM
     case MAVLINK_MSG_ID_RADIO_STATUS:
         _handleRadioStatus(message);
         break;
@@ -1247,7 +1288,44 @@ void Vehicle::_handleHighLatency2(mavlink_message_t& message)
         _onboardControlSensorsUnhealthy = 0;
     }
 }
+//CUSTOM
+void Vehicle::_handleServoOutputRaw(const mavlink_message_t& message)
+{
+    mavlink_servo_output_raw_t channels;
+    mavlink_msg_servo_output_raw_decode(&message, &channels);
 
+    uint16_t* _rgChannelvalues[cMaxServoChannels] = {
+        &channels.servo1_raw,
+        &channels.servo2_raw,
+        &channels.servo3_raw,
+        &channels.servo4_raw,
+    };
+    int rpmValues[cMaxServoChannels] = {0, 0 ,0 ,0};
+    for (int i=0; i<cMaxServoChannels; i++){
+        uint16_t channelValue = *_rgChannelvalues[i];
+        rpmValues[i] = channelValue == UINT16_MAX ? -1 : channelValue;
+        if(channelValue <=2000 && channelValue >= 20){
+            switch (i){
+            case 0:
+                _servoRawFact.setRawValue(rpmValues[0]/20);
+                break;
+            case 1:
+                _servoRaw2Fact.setRawValue(rpmValues[1]/20);
+                break;
+            case 2:
+                _servoRaw3Fact.setRawValue(rpmValues[2]/20);
+                break;
+            case 3:
+                _servoRaw4Fact.setRawValue(rpmValues[3]/20);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+    emit servoChannels(channels.port, rpmValues);
+}
+//CUSTOM
 void Vehicle::_handleAltitude(mavlink_message_t& message)
 {
     mavlink_altitude_t altitude;
