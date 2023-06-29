@@ -302,7 +302,12 @@ public:
     Q_PROPERTY(Fact* distanceToGCS      READ distanceToGCS      CONSTANT)
     Q_PROPERTY(Fact* hobbs              READ hobbs              CONSTANT)
     Q_PROPERTY(Fact* throttlePct        READ throttlePct        CONSTANT)
-
+    //CUSTOM
+    Q_PROPERTY(Fact* servoRaw           READ servoRaw           CONSTANT)
+    Q_PROPERTY(Fact* servoRaw2          READ servoRaw2          CONSTANT)
+    Q_PROPERTY(Fact* servoRaw3          READ servoRaw3          CONSTANT)
+    Q_PROPERTY(Fact* servoRaw4          READ servoRaw4          CONSTANT)
+    //CUSTOM
     Q_PROPERTY(FactGroup*           gps             READ gpsFactGroup               CONSTANT)
     Q_PROPERTY(FactGroup*           gps2            READ gps2FactGroup              CONSTANT)
     Q_PROPERTY(FactGroup*           wind            READ windFactGroup              CONSTANT)
@@ -647,7 +652,12 @@ public:
     Fact* distanceToGCS                     () { return &_distanceToGCSFact; }
     Fact* hobbs                             () { return &_hobbsFact; }
     Fact* throttlePct                       () { return &_throttlePctFact; }
-
+    //CUSTOM
+    Fact* servoRaw                          () { return &_servoRawFact; }
+    Fact* servoRaw2                         () { return &_servoRaw2Fact; }
+    Fact* servoRaw3                         () { return &_servoRaw3Fact; }
+    Fact* servoRaw4                         () { return &_servoRaw4Fact; }
+    //CUSTOM
     FactGroup* gpsFactGroup                 () { return &_gpsFactGroup; }
     FactGroup* gps2FactGroup                () { return &_gps2FactGroup; }
     FactGroup* windFactGroup                () { return &_windFactGroup; }
@@ -676,7 +686,9 @@ public:
     Autotune*                       autotune            () const { return _autotune; }
 
     static const int cMaxRcChannels = 18;
-
+    //CUSTOM
+    static const int cMaxServoChannels = 4;
+    //CUSTOM
     /// Sends the specified MAV_CMD to the vehicle. If no Ack is received command will be retried. If a sendMavCommand is already in progress
     /// the command will be queued and sent when the previous command completes.
     ///     @param compId Component to send to.
@@ -836,7 +848,12 @@ public slots:
     void setVtolInFwdFlight                 (bool vtolInFwdFlight);
     void _offlineFirmwareTypeSettingChanged (QVariant varFirmwareType); // Should only be used by MissionControler to set firmware from Plan file
     void _offlineVehicleTypeSettingChanged  (QVariant varVehicleType);  // Should only be used by MissionController to set vehicle type from Plan file
-
+    //CUSTOM
+    void _handleServoOutputRaw              (const mavlink_message_t& message);
+    QVariant getSetpointRoll                    ();
+    QVariant getSetpointPitch                   ();
+    QVariant getSetpointYaw                     ();
+    //CUSTOM
 signals:
     void coordinateChanged              (QGeoCoordinate coordinate);
     void joystickEnabledChanged         (bool enabled);
@@ -907,7 +924,9 @@ signals:
     ///     @param channelCount Number of available channels, cMaxRcChannels max
     ///     @param pwmValues -1 signals channel not available
     void rcChannelsChanged              (int channelCount, int pwmValues[cMaxRcChannels]);
-
+    //CUSTOM
+    void servoChannels                  (int channelPort, int rpmValues[cMaxServoChannels]);
+    //CUSTOM
     /// Remote control RSSI changed  (0% - 100%)
     void remoteControlRSSIChanged       (uint8_t rssi);
 
@@ -1304,7 +1323,12 @@ private:
     Fact _distanceToGCSFact;
     Fact _hobbsFact;
     Fact _throttlePctFact;
-
+    //CUSTOM
+    Fact _servoRawFact;
+    Fact _servoRaw2Fact;
+    Fact _servoRaw3Fact;
+    Fact _servoRaw4Fact;
+    //CUSTOM
     VehicleGPSFactGroup             _gpsFactGroup;
     VehicleGPS2FactGroup            _gps2FactGroup;
     VehicleWindFactGroup            _windFactGroup;
@@ -1356,7 +1380,12 @@ private:
     static const char* _distanceToGCSFactName;
     static const char* _hobbsFactName;
     static const char* _throttlePctFactName;
-
+    //CUSTOM
+    static const char* _servoRawFactName;
+    static const char* _servoRaw2FactName;
+    static const char* _servoRaw3FactName;
+    static const char* _servoRaw4FactName;
+    //CUSTOM
     static const char* _gpsFactGroupName;
     static const char* _gps2FactGroupName;
     static const char* _windFactGroupName;
