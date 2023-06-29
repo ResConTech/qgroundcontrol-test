@@ -307,6 +307,10 @@ public:
     Q_PROPERTY(Fact* servoRaw2          READ servoRaw2          CONSTANT)
     Q_PROPERTY(Fact* servoRaw3          READ servoRaw3          CONSTANT)
     Q_PROPERTY(Fact* servoRaw4          READ servoRaw4          CONSTANT)
+    Q_PROPERTY(Fact* pwm1               READ pwm1               CONSTANT)
+    Q_PROPERTY(Fact* pwm2               READ pwm2               CONSTANT)
+    Q_PROPERTY(Fact* pwm3               READ pwm3               CONSTANT)
+    Q_PROPERTY(Fact* pwm4               READ pwm4               CONSTANT)
     //CUSTOM
     Q_PROPERTY(FactGroup*           gps             READ gpsFactGroup               CONSTANT)
     Q_PROPERTY(FactGroup*           gps2            READ gps2FactGroup              CONSTANT)
@@ -657,6 +661,10 @@ public:
     Fact* servoRaw2                         () { return &_servoRaw2Fact; }
     Fact* servoRaw3                         () { return &_servoRaw3Fact; }
     Fact* servoRaw4                         () { return &_servoRaw4Fact; }
+    Fact* pwm1                              () { return &_pwm1Fact; }
+    Fact* pwm2                              () { return &_pwm2Fact; }
+    Fact* pwm3                              () { return &_pwm3Fact; }
+    Fact* pwm4                              () { return &_pwm4Fact; }
     //CUSTOM
     FactGroup* gpsFactGroup                 () { return &_gpsFactGroup; }
     FactGroup* gps2FactGroup                () { return &_gps2FactGroup; }
@@ -1328,6 +1336,10 @@ private:
     Fact _servoRaw2Fact;
     Fact _servoRaw3Fact;
     Fact _servoRaw4Fact;
+    Fact _pwm1Fact;
+    Fact _pwm2Fact;
+    Fact _pwm3Fact;
+    Fact _pwm4Fact;
     //CUSTOM
     VehicleGPSFactGroup             _gpsFactGroup;
     VehicleGPS2FactGroup            _gps2FactGroup;
@@ -1385,6 +1397,10 @@ private:
     static const char* _servoRaw2FactName;
     static const char* _servoRaw3FactName;
     static const char* _servoRaw4FactName;
+    static const char* _pwm1FactName;
+    static const char* _pwm2FactName;
+    static const char* _pwm3FactName;
+    static const char* _pwm4FactName;
     //CUSTOM
     static const char* _gpsFactGroupName;
     static const char* _gps2FactGroupName;
