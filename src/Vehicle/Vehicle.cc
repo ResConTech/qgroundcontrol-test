@@ -104,6 +104,7 @@ const char* Vehicle::_pwm1FactName =                "pwm1";
 const char* Vehicle::_pwm2FactName =                "pwm2";
 const char* Vehicle::_pwm3FactName =                "pwm3";
 const char* Vehicle::_pwm4FactName =                "pwm4";
+const char* Vehicle::_batteryFactName   =           "battery";
 //CUSTOM
 const char* Vehicle::_gpsFactGroupName =                "gps";
 const char* Vehicle::_gps2FactGroupName =               "gps2";
@@ -174,6 +175,7 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _pwm2Fact                     (0, _pwm2FactName,              FactMetaData::valueTypeUint16)
     , _pwm3Fact                     (0, _pwm3FactName,              FactMetaData::valueTypeUint16)
     , _pwm4Fact                     (0, _pwm4FactName,              FactMetaData::valueTypeUint16)
+    , _batteryFact                  (0, _batteryFactName,           FactMetaData::valueTypeUint16)
     //CUSTOM
     , _gpsFactGroup                 (this)
     , _gps2FactGroup                (this)
@@ -338,6 +340,7 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     , _pwm2Fact                         (0, _pwm2FactName,              FactMetaData::valueTypeUint16)
     , _pwm3Fact                         (0, _pwm3FactName,              FactMetaData::valueTypeUint16)
     , _pwm4Fact                         (0, _pwm4FactName,              FactMetaData::valueTypeUint16)
+    , _batteryFact                      (0, _batteryFactName,           FactMetaData::valueTypeUint16)
     //CUSTOM
     , _gpsFactGroup                     (this)
     , _gps2FactGroup                    (this)
@@ -482,6 +485,7 @@ void Vehicle::_commonInit()
     _addFact(&_pwm2Fact,                _pwm2FactName);
     _addFact(&_pwm3Fact,                _pwm3FactName);
     _addFact(&_pwm4Fact,                _pwm4FactName);
+    _addFact(&_batteryFact,             _batteryFactName);
     //CUSTOM
     _hobbsFact.setRawValue(QVariant(QString("0000:00:00")));
     _addFact(&_hobbsFact,               _hobbsFactName);
@@ -1513,7 +1517,9 @@ void Vehicle::_handleBatteryStatus(mavlink_message_t& message)
     if (!_lowestBatteryChargeStateAnnouncedMap.contains(batteryStatus.id)) {
         _lowestBatteryChargeStateAnnouncedMap[batteryStatus.id] = batteryStatus.charge_state;
     }
-
+    //CUSTOM
+    _batteryFact.setRawValue(batteryStatus.battery_remaining);
+    //CUSTOM
     QString batteryMessage;
 
     switch (batteryStatus.charge_state) {
