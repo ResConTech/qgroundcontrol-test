@@ -154,18 +154,10 @@ FlightMap {
             batt_low           =    paramController.getValue('batt_low')
             batt_mid           =    paramController.getValue('batt_mid')
 
-            if(_activeVehicle){
-                top_left_val       =    _activeVehicle.servoRaw3.value
-                top_right_val      =    _activeVehicle.servoRaw.value
-                bottom_left_val    =    _activeVehicle.servoRaw2.value
-                bottom_right_val   =    _activeVehicle.servoRaw4.value
-            }
-            else{
-                top_left_val       =    0
-                top_right_val      =    0
-                bottom_left_val    =    0
-                bottom_right_val   =    0
-            }
+            top_left_val       = _activeVehicle.pwm3.value               //_activeVehicle.servoRaw3.value
+            top_right_val      = _activeVehicle.pwm1.value               //_activeVehicle.servoRaw.value
+            bottom_left_val    = _activeVehicle.pwm2.value               //_activeVehicle.servoRaw2.value
+            bottom_right_val   = _activeVehicle.pwm4.value               //_activeVehicle.servoRaw4.value
 
             batt           =   (PreFlightBatteryCheck && _activeVehicle) ? _activeVehicle.batteries.get(0).percentRemaining.rawValue : 0
 
