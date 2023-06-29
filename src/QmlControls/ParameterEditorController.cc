@@ -14,7 +14,50 @@
 #include "AppSettings.h"
 
 #include <QStandardPaths>
+//CUSTOM
+int rc_or_pid = 1;
+double error_range = 2.5;
 
+double RPM_color_low_min = 35;
+double RPM_color_low_max = 40;
+double RPM_color_mid_max = 95;
+double RPM_color_high_max = 99;
+
+double RPM_color_mid = 95;
+double RPM_color_high = 99;
+
+double batt_low = 10;
+double batt_mid = 25;
+
+QColor color_rpm_min = "green";
+QColor color_rpm_med = "yellow";
+QColor color_rpm_max = "red";
+
+QColor color_batt_max = "green";
+QColor color_batt_med = "yellow";
+QColor color_batt_min = "red";
+
+double Rerror_color_minimum = 1;
+double Rerror_color_medium = 3.5;
+double Rerror_color_maximum = 5;
+
+
+double error_color_minimum = Rerror_color_minimum / Rerror_color_maximum;
+double error_color_medium = Rerror_color_medium / Rerror_color_maximum;
+double error_color_maximum = 1;
+
+QColor color_error_min = "green";
+QColor color_error_med = "yellow";
+QColor color_error_max = "red";
+
+bool error = true;
+bool drone = true;
+bool battery = true;
+bool buttons = true;
+bool windDisplay = true && drone;
+bool wout = true;
+bool minmax = true && drone;
+//CUSTOM
 ParameterEditorController::ParameterEditorController(void)
     : _parameterMgr(_vehicle->parameterManager())
 {
@@ -35,7 +78,234 @@ ParameterEditorController::~ParameterEditorController()
 {
 
 }
+//CUSTOM
+Fact* ParameterEditorController::getParam(const QString& paramName)
+{
+    return _parameterMgr->getParameter(_vehicle->defaultComponentId(), paramName);
+}
+void ParameterEditorController::rcToPid()
+{
+    Fact* fact=getParam("MC_ML_CTRL_EN");
+    fact->_containerRawValueChanged(rc_or_pid);
+}
+void ParameterEditorController::changeValue(QString variable, double value){
+    if(variable.compare("RC_OR_PID") == 0){
+        rc_or_pid = value;
+    }
+    else if(variable.compare("batt_low") == 0){
+        batt_low = value;
+    }
+    else if(variable.compare("batt_mid") == 0){
+        batt_mid = value;
+    }
+    else if(variable.compare("error_range") == 0){
+        error_range = value;
+    }
+    else if(variable.compare("Rerror_color_minimum") == 0){
+        Rerror_color_minimum = value;
+    }
+    else if(variable.compare("Rerror_color_medium") == 0){
+        Rerror_color_medium = value;
+    }
+    else if(variable.compare("Rerror_color_maximum") == 0){
+        Rerror_color_maximum = value;
+    }
+    else if(variable.compare("RPM_color_low_min") == 0){
+        RPM_color_low_min = value;
+    }
+    else if(variable.compare("RPM_color_low_max") == 0){
+        RPM_color_low_max = value;
+    }
+    else if(variable.compare("RPM_color_mid_max") == 0){
+        RPM_color_mid_max = value;
+    }
+    else if(variable.compare("RPM_color_high_max") == 0){
+        RPM_color_high_max = value;
+    }
+    else if(variable.compare("RPM_color_mid") == 0){
+        RPM_color_mid = value;
+    }
+    else if(variable.compare("RPM_color_high") == 0){
+        RPM_color_high = value;
+    }
+    else if(variable.compare("error_color_minimum") == 0){
+        error_color_minimum = value;
+    }
+    else if(variable.compare("error_color_medium") == 0){
+        error_color_medium = value;
+    }
+    else if(variable.compare("error_color_maximum") == 0){
+        error_color_maximum = value;
+    }
+    else if(variable.compare("error") == 0){
+        if(value == 0) error = false;
+        else error = true;
+    }
+    else if(variable.compare("drone") == 0){
+        if(value == 0) drone = false;
+        else drone = true;
+    }
+    else if(variable.compare("battery") == 0){
+        if(value == 0) battery = false;
+        else battery = true;
+    }
+    else if(variable.compare("buttons") == 0){
+        if(value == 0) buttons = false;
+        else buttons = true;
+    }
+    else if(variable.compare("windDisplay") == 0){
+        if(value != 0 && drone) windDisplay = true;
+        else windDisplay = false;
+    }
+    else if(variable.compare("wout") == 0){
+        if(value == 0) wout = false;
+        else wout = true;
+    }
+    else if(variable.compare("minmax") == 0){
+        if(value != 0 && drone) minmax = true;
+        else minmax = false;
+    }
+}
+void ParameterEditorController::changeColor(QString variable, QColor value){
+    if(variable.compare("color_rpm_min") == 0){
+        color_rpm_min = value;
+    }
+    else if(variable.compare("color_rpm_med") == 0){
+        color_rpm_med = value;
+    }
+    else if(variable.compare("color_rpm_max") == 0){
+        color_rpm_max = value;
+    }
+    else if(variable.compare("color_error_min") == 0){
+        color_error_min = value;
+    }
+    else if(variable.compare("color_error_med") == 0){
+        color_error_med = value;
+    }
+    else if(variable.compare("color_error_max") == 0){
+        color_error_max = value;
+    }
+    else if(variable.compare("color_batt_min") == 0){
+        color_batt_min = value;
+    }
+    else if(variable.compare("color_batt_med") == 0){
+        color_batt_med = value;
+    }
+    else if(variable.compare("color_batt_max") == 0){
+        color_batt_max = value;
+    }
+}
 
+QColor ParameterEditorController::getColor(QString variable){
+    if(variable.compare("color_rpm_min") == 0){
+        return color_rpm_min;
+    }
+    else if(variable.compare("color_rpm_med") == 0){
+        return color_rpm_med;
+    }
+    else if(variable.compare("color_rpm_max") == 0){
+        return color_rpm_max;
+    }
+    else if(variable.compare("color_error_min") == 0){
+        return color_error_min;
+    }
+    else if(variable.compare("color_error_med") == 0){
+        return color_error_med;
+    }
+    else if(variable.compare("color_error_max") == 0){
+        return color_error_max;
+    }
+    else if(variable.compare("color_batt_min") == 0){
+        return color_batt_min;
+    }
+    else if(variable.compare("color_batt_med") == 0){
+        return color_batt_med;
+    }
+    else if(variable.compare("color_batt_max") == 0){
+        return color_batt_max;
+    }
+    //default
+    return "green";
+}
+
+double ParameterEditorController::getValue(QString variable){
+    if(variable.compare("error_range") == 0){
+        return error_range;
+    }
+    else if(variable.compare("batt_low") == 0){
+        return batt_low;
+    }
+    else if(variable.compare("batt_mid") == 0){
+        return batt_mid;
+    }
+    else if(variable.compare("Rerror_color_minimum") == 0){
+        return Rerror_color_minimum;
+    }
+    else if(variable.compare("Rerror_color_medium") == 0){
+        return Rerror_color_medium;
+    }
+    else if(variable.compare("Rerror_color_maximum") == 0){
+        return Rerror_color_maximum;
+    }
+    else if(variable.compare("RPM_color_low_min") == 0){
+        return RPM_color_low_min;
+    }
+    else if(variable.compare("RPM_color_low_max") == 0){
+        return RPM_color_low_max;
+    }
+    else if(variable.compare("RPM_color_mid_max") == 0){
+        return RPM_color_mid_max;
+    }
+    else if(variable.compare("RPM_color_high_max") == 0){
+        return RPM_color_high_max;
+    }
+    else if(variable.compare("RPM_color_mid") == 0){
+        return RPM_color_mid;
+    }
+    else if(variable.compare("RPM_color_high") == 0){
+        return RPM_color_high;
+    }
+    else if(variable.compare("error_color_minimum") == 0){
+        return error_color_minimum;
+    }
+    else if(variable.compare("error_color_medium") == 0){
+        return error_color_medium;
+    }
+    else if(variable.compare("error_color_maximum") == 0){
+        return error_color_maximum;
+    }
+    else if(variable.compare("error") == 0){
+        if(error) return 1;
+        else return 0;
+    }
+    else if(variable.compare("drone") == 0){
+        if(drone) return 1;
+        else return 0;
+    }
+    else if(variable.compare("battery") == 0){
+        if(battery) return 1;
+        else return 0;
+    }
+    else if(variable.compare("buttons") == 0){
+        if(buttons) return 1;
+        else return 0;
+    }
+    else if(variable.compare("windDisplay") == 0){
+        if(windDisplay && drone) return 1;
+        else return 0;
+    }
+    else if(variable.compare("wout") == 0){
+        if(wout) return 1;
+        else return 0;
+    }
+    else if(variable.compare("minmax") == 0){
+        if(minmax && drone) return 1;
+        else return 0;
+    }
+    //default
+    return -1;
+}
+//CUSTOM
 void ParameterEditorController::_buildListsForComponent(int compId)
 {
     for (const QString& factName: _parameterMgr->parameterNames(compId)) {
