@@ -163,7 +163,11 @@ ApplicationWindow {
     function showSettingsTool() {
         showTool(qsTr("Application Settings"), "AppSettings.qml", "/res/QGCLogoWhite")
     }
-
+    //CUSTOM
+    function showCustomizationTool() {
+        showTool(qsTr("Customization Settings"), "CustomizationScreen.qml", "/res/QGCLogoWhite")
+    }
+    //CUSTOM
     //-------------------------------------------------------------------------
     //-- Global simple message dialog
 
@@ -409,7 +413,23 @@ ApplicationWindow {
                             }
                         }
                     }
-
+                    //CUSTOM
+                    SubMenuButton {
+                        id:                 customizationButton
+                        height:             _toolButtonHeight
+                        Layout.fillWidth:   true
+                        text:               qsTr("Customization Settings")
+                        imageResource:      "/res/QGCLogoFull"
+                        imageColor:         "transparent"
+                        visible:            true
+                        onClicked: {
+                            if (!mainWindow.preventViewSwitch()) {
+                                toolSelectDialog.hideDialog()
+                                mainWindow.showCustomizationTool()
+                            }
+                        }
+                    }
+                    //CUSTOM
                     ColumnLayout {
                         width:      innerLayout.width
                         spacing:    0
