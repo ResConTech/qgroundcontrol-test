@@ -35,7 +35,7 @@ import QGroundControl.FactControls  1.0
 FlightMap {
     id:                         _root
     ////////////////////CUSTOM
-    property double batt:  (PreFlightBatteryCheck && _activeVehicle) ? _activeVehicle.batteries.get(0).percentRemaining.rawValue : 0
+    property double batt: 0
 
     property var    curSystem:          controller ? controller.activeSystem : null
     property var    curMessage:         curSystem && curSystem.messages.count ? curSystem.messages.get(curSystem.selected) : null
@@ -161,7 +161,9 @@ FlightMap {
                 bottom_right_val   = _activeVehicle.pwm4.value               //_activeVehicle.servoRaw4.value
             }
 
-            batt           =   (PreFlightBatteryCheck && _activeVehicle) ? _activeVehicle.batteries.get(0).percentRemaining.rawValue : 0
+            if(PreFlightBatteryCheck && _activeVehicle){
+                batt           =      _activeVehicle.battery.value
+            }
 
             if(train_button.state === 'train_on'){
                 if(first === 1){
