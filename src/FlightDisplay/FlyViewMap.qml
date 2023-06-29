@@ -9,19 +9,28 @@
 
 import QtQuick                      2.11
 import QtQuick.Controls             2.4
+import QtQuick.Layouts              1.11
 import QtLocation                   5.3
 import QtPositioning                5.3
 import QtQuick.Dialogs              1.2
+import QtQuick.Window               2.2
+import QtCharts                     2.3
 
 import QGroundControl               1.0
 import QGroundControl.Airspace      1.0
 import QGroundControl.Controllers   1.0
 import QGroundControl.Controls      1.0
+import QGroundControl.FactSystem    1.0
 import QGroundControl.FlightDisplay 1.0
 import QGroundControl.FlightMap     1.0
 import QGroundControl.Palette       1.0
 import QGroundControl.ScreenTools   1.0
 import QGroundControl.Vehicle       1.0
+import QtQuick.Shapes 1.3
+import QtQuick.Controls.Styles 1.4
+
+import QGroundControl.Airmap        1.0
+import QGroundControl.FactControls  1.0
 
 FlightMap {
     id:                         _root
