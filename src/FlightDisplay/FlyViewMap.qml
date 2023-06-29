@@ -26,7 +26,7 @@ import QGroundControl.Vehicle       1.0
 FlightMap {
     id:                         _root
     ////////////////////CUSTOM
-    property double batt PreFlightBatteryCheck ? _activeVehicle.batteries.get(0).percentRemaining.rawValue : 0
+    property double batt: PreFlightBatteryCheck ? _activeVehicle.batteries.get(0).percentRemaining.rawValue : 0
     property var    curSystem:          controller ? controller.activeSystem : null
     property var    curMessage:         curSystem && curSystem.messages.count ? curSystem.messages.get(curSystem.selected) : null
     property int    curCompID:          0
