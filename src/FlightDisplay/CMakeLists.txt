@@ -1,6 +1,9 @@
 
 add_custom_target(FligthDisplayQml
 	SOURCES
+		battDisplaySettings.qml	
+		CustomizationScreen.qml
+		errorDisplaySettings.qml
 		DefaultChecklist.qml
 		FixedWingChecklist.qml
 		FlightDisplayViewDummy.qml
@@ -40,6 +43,7 @@ add_custom_target(FligthDisplayQml
 		ProximityRadarValues.qml
 		ProximityRadarVideoView.qml
 		RoverChecklist.qml
+		rpmDisplaySettings.qml
 		SubChecklist.qml
 		TelemetryValuesBar.qml
 		TerrainProgress.qml
@@ -50,4 +54,3 @@ add_custom_target(FligthDisplayQml
 		ObstacleDistanceOverlayMap.qml
 		ObstacleDistanceOverlayVideo.qml
 )
-
