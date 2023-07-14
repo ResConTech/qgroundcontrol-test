@@ -718,6 +718,9 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     }
 
     switch (message.msgid) {
+    case MAVLINK_MSG_ID_ACTUATOR_MOTORS:
+        _handleActuatorMotors(message);
+        break;
     case MAVLINK_MSG_ID_HOME_POSITION:
         _handleHomePosition(message);
         break;
@@ -1825,6 +1828,35 @@ void Vehicle::_handleRadioStatus(mavlink_message_t& message)
     if(_telemetryRNoise != rnoise) {
         _telemetryRNoise = rnoise;
         emit telemetryRNoiseChanged(_telemetryRNoise);
+    }
+}
+void Vehicle::_handleActuatorMotors(mavlink_message_t& message)
+{
+
+    mavlink_actuator_motors_t act;
+
+    mavlink_msg_actuator_motors_decode(&message, &act);
+
+    float* _values[8] = {
+        &act.thrust_1_raw,
+        &act.thrust_2_raw,
+        &act.thrust_3_raw,
+        &act.thrust_4_raw,
+        &act.thrust_5_raw,
+        &act.thrust_6_raw,
+        &act.thrust_7_raw,
+        &act.thrust_8_raw,
+    };
+    float pwmValues[8];
+
+    for (int i=0; i<8; i++) {
+        float channelValue = *_values[i];
+
+        if (i < 4) {
+            pwmValues[i] = channelValue;
+        } else {
+            pwmValues[i] = -1;
+        }
     }
 }
 
