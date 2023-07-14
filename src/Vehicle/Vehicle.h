@@ -1274,6 +1274,7 @@ private slots:
     void _updateFlightTime              ();
 
 private:
+    void _handleActuatorMotors          (mavlink_message_t& message);
     bool _containsLink                  (LinkInterface* link);
     void _addLink                       (LinkInterface* link);
     void _joystickChanged               (Joystick* joystick);
